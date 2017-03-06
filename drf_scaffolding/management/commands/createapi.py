@@ -221,16 +221,39 @@ class Command(BaseCommand):
 
     def get_meta_model_config(self, model):
         if hasattr(model._meta, 'drf_config'):
-            if model._meta.drf_config['api'] is True:
-                model_config = {
-                    'name': model.__name__,
-                }
+            if 'api' in model._meta.drf_config:
+                api = model._meta.drf_config['api']
+                if api['scaffolding'] is True:
+                    model_config = {
+                        'name': model.__name__,
+                    }
 
-                if 'fields' in model._meta.drf_config:
-                    model_config['fields'] = model._meta.drf_config['fields']
+                    if 'methods' in api:
+                        model_config['methods'] = api['methods']
+                    else:
+                        model_config['methods'] = [
+                            'CREATE',
+                            'RETRIEVE',
+                            'LIST',
+                            'DELETE',
+                            'UPDATE'
+                        ]
 
-                return model_config
+                    if 'serializer' in api:
+                        serializer = api['serializer']
+                        if 'scaffolding' in serializer:
+                            if serializer['scaffolding'] is True:
+                                model_config['serializer'] = True
+                                if 'fields' in serializer:
+                                    model_config['fields'] = serializer['fields']  # noqa
+                            else:
+                                model_config['serializer'] = False
+                        else:
+                            model_config['serializer'] = False
+                    else:
+                        model_config['serializer'] = False
 
+                    return model_config
         return None
 
     def get_label_app_config(self, app_labels, api_version):
@@ -312,6 +335,7 @@ class Command(BaseCommand):
             self.get_or_create_dir(app['serializer_path'])
             for model in app['models']:
                 self.write_api(app, model, PROJECT_NAME)
-                self.write_serializer(app, model, PROJECT_NAME)
+                if model['serializer'] is True:
+                    self.write_serializer(app, model, PROJECT_NAME)
 
             self.write_routes(app, app['models'], PROJECT_NAME, API_VERSION)
