@@ -23,6 +23,7 @@ class {{model.name}}ViewSet(
 
     permission_classes = []  # put your custom permissions here
 
+{%if 'CREATE' in model.methods%}
     def create(self, request, *args, **kwargs):
         """
         Allows create a {{model.name}} in {{project_name}}.
@@ -45,7 +46,7 @@ class {{model.name}}ViewSet(
         """
         return super({{model.name}}ViewSet, self).create(
             request, *args, **kwargs
-        )
+        ){%endif%}{%if 'LIST' in model.methods%}
 
     def list(self, request, *args, **kwargs):
         """
@@ -66,7 +67,7 @@ class {{model.name}}ViewSet(
         """
         return super({{model.name}}ViewSet, self).list(
             request, *args, **kwargs
-        )
+        ){%endif%}{%if 'RETRIEVE' in model.methods%}
 
     def retrieve(self, request, *args, **kwargs):
         """
@@ -89,7 +90,7 @@ class {{model.name}}ViewSet(
         """
         return super({{model.name}}ViewSet, self).retrieve(
             request, *args, **kwargs
-        )
+        ){%endif%}{%if 'UPDATE' in model.methods%}
 
     def partial_update(self, request, pk=None):
         """
@@ -113,7 +114,7 @@ class {{model.name}}ViewSet(
         produces:
             - application/json
         """
-        return super({{model.name}}ViewSet, self).partial_update(request)
+        return super({{model.name}}ViewSet, self).partial_update(request){%endif%}{%if 'DELETE' in model.methods%}
 
     def destroy(self, request, pk=None):
         """
@@ -135,7 +136,7 @@ class {{model.name}}ViewSet(
         produces:
             - application/json
         """
-        return super({{model.name}}ViewSet, self).destroy(request)
+        return super({{model.name}}ViewSet, self).destroy(request){%endif%}
 
     def get_queryset(self, *args, **kwargs):
         queryset = {{model.name}}.objects.all()
