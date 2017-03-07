@@ -20,7 +20,15 @@ INSTALLED_APPS = [
 ...
 ```
 
-3.- Define configurations on your models. For example.
+3.- Define configurations on your models.
+If you do not want to generate the API, just do not add the drf_config attribute in the Meta class.
+The scaffolding attribute in 'api' is the one that defines whether an api will be generated for the model with that configuration.
+The method attribute defines the http methods to be appended to the api. The you do not define this attribute will be assigned http methods:
+```python
+POST, GET, PATCH, DELETE
+```
+The serializer attribute also contains the scaffolding property to define whether you want to generate the serializers together with the api.The default value is false, so if you do not add the property the serializer will not be generated.
+The fields field in serializer defines the fields that we want to be added in the serializer of the model to be used in api.If you leave this property undefined, then, only the id in the serializer will be assigned.
 ```python
 class Poll(models.Model):
     class Meta:
