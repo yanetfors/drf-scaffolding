@@ -143,12 +143,15 @@ class Command(BaseCommand):
         exclude_apps = settings.DRF_SETTINGS['exclude_apps']
 
         if len(app_labels) == 0:
-            apps = ContentType.objects.exclude(
-                app_label__in=exclude_apps
-            ).values_list(
-                'app_label',
-                flat=True
-            ).distinct()
+            if hasattr(dj_settings, 'LOCAL_APPS'):
+                apps = [i.split('.')[-1] for i in dj_settings.LOCAL_APPS]
+            else:
+                apps = ContentType.objects.exclude(
+                    app_label__in=exclude_apps
+                ).values_list(
+                    'app_label',
+                    flat=True
+                ).distinct()
 
             return set(apps)
 
