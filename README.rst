@@ -1,3 +1,9 @@
-### drf-scaffolding
+drfscaffolding
+=========================
 
-Aplicación Django que te permite crear API's completas basándose en la definición de los modelos que tengas en tu proyecto.
+Django app which allow create full APIs based on your models defined in your project.
+
+
+`Doc <https://angellagunas.github.io/drf-scaffolding/>`_.
+`Github <https://github.com/angellagunas/drf-scaffolding/>`_.
+

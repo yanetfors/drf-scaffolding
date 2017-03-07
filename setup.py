@@ -5,14 +5,14 @@ from setuptools import setup, find_packages
 
 setup(
     name='drfscaffolding',
-    version='0.0.1',
+    version='0.0.3',
     description=(
-        'Aplicación Django que te permite crear APIs completas basándose en '
-        'la definición de los modelos que tengas en tu proyecto'
+        'Django app which allow create full APIs based on your models defined '
+        'in your project.'
     ),
     author='al',
     author_email='angel.david.lagunas@gmail.com',
-    url='https://github.com/angellagunas/drf-scaffolding',
+    url='https://angellagunas.github.io/drf-scaffolding/',
     download_url=(
         'https://github.com/angellagunas/drf-scaffolding/archive/0.1.tar.gz'
     ),
