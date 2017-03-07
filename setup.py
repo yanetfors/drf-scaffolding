@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='drfscaffolding',
-    version='0.0.3',
+    version='0.0.4',
     description=(
         'Django app which allow create full APIs based on your models defined '
         'in your project.'
