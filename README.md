@@ -4,7 +4,7 @@ Django app which allow create full APIs based on your models defined in your pro
 ### How to use.
 1.-  Install drfscaffolding following:
 ```bash
-pip install pip install drfscaffolding
+pip install drfscaffolding
 ```
 
 2.- Add rest_framework, rest_framework_swagger and drf_scaffolding on your install apps
