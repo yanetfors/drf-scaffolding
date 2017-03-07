@@ -31,7 +31,7 @@ LOCAL_APPS = [
     'other_local_app'
 ]
 
-LOCAL_APPS += THIRD_PARTY_APPS + LOCAL_APPS
+INSTALLED_APPS += THIRD_PARTY_APPS + LOCAL_APPS
 
 ...
 ```
@@ -86,4 +86,9 @@ urlpatterns = [
 
 ```
 
-6.- Now, you can check your urls in your web browser.
+6.- Run your server
+```bash
+python manage.py runserver
+```
+
+7.- Now, you can check your urls in your web browser and use your api.
