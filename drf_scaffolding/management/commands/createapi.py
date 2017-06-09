@@ -69,76 +69,6 @@ class Command(BaseCommand):
         else:
             return True
 
-    def create_api_files(self, api_uri, apps):
-        autodiscover_path = self.join_label_app(api_uri, 'autodiscover')
-        api_urls_path = self.join_label_app(api_uri, 'urls')
-
-        #
-        # Create init file into api folder
-        #
-        self.create_init_file(api_uri)
-
-        #
-        # Create autodiscover file into api folder
-        #
-        context = Context({
-            'apps': apps,
-        })
-        self.get_or_create_file(
-            autodiscover_path,
-            context=context,
-            template=templates.AUTODISCOVER_TEMPLATE
-        )
-
-        #
-        # create urls file into api folder
-        #
-        self.get_or_create_file(
-            api_urls_path,
-            template=templates.API_URLS_TEMPLATE
-        )
-
-    def create_api_version_files(self, api_uri):
-        api_version_urls_path = self.join_label_app(api_uri, 'urls')
-        api_router_path = self.join_label_app(api_uri, 'routers')
-
-        #
-        # Create init file into api/v1 folder
-        #
-        self.create_init_file(api_uri)
-
-        #
-        # Create urls file into api/v1 folder
-        #
-        self.get_or_create_file(
-            api_version_urls_path,
-            template=templates.API_V1_URLS_TEMPLATE
-        )
-
-        #
-        # Create routers file into api/v1 folder
-        #
-        self.get_or_create_file(
-            api_router_path,
-            template=templates.ROUTER_TEMPLATE
-        )
-
-    def create_api_folder(self, project_path, apps):
-        api_url = 'api'
-        api_version_url = self.join_label_app(api_url, 'v1', False)
-        #
-        # first, create api directories
-        #
-        self.get_or_create_dir(api_url)
-        self.get_or_create_dir(api_version_url)
-
-        #
-        # second, create files
-        #
-        self.create_api_files(api_url, apps)
-        self.create_api_version_files(api_version_url)
-        return True
-
     def get_app_labels(self, app_labels):
         exclude_apps = settings.DRF_SETTINGS['exclude_apps']
 
@@ -320,8 +250,6 @@ class Command(BaseCommand):
         PROJECT_NAME = dj_settings.BASE_DIR.split('/')[-1]
         API_VERSION = settings.DRF_SETTINGS['version']
         app_labels = self.get_app_labels(app_labels)
-
-        self.create_api_folder(PROJECT_NAME, app_labels)
 
         #
         # Make sure the app they asked for exists
