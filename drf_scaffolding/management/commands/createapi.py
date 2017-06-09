@@ -3,10 +3,10 @@ import os
 import sys
 
 from django.apps import apps
-from django.core.management import BaseCommand
 from django.conf import settings as dj_settings
 from django.contrib.contenttypes.models import ContentType
-from django.template import Template, Context
+from django.core.management import BaseCommand
+from django.template import Context, Template
 
 from . import settings, templates
 
@@ -119,8 +119,8 @@ class Command(BaseCommand):
         # Create routers file into api/v1 folder
         #
         self.get_or_create_file(
-           api_router_path,
-           template=templates.ROUTER_TEMPLATE
+            api_router_path,
+            template=templates.ROUTER_TEMPLATE
         )
 
     def create_api_folder(self, project_path, apps):
