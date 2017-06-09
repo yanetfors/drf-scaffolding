@@ -128,13 +128,12 @@ class Command(BaseCommand):
         #
         # second, create files
         #
-        self.create_api_files(api_url, apps)
+        self.create_api_files(api_url)
         self.create_api_version_files(api_version_url)
         return True
 
     def handle(self, *app_labels, **options):
         PROJECT_NAME = dj_settings.BASE_DIR.split('/')[-1]
         API_VERSION = settings.DRF_SETTINGS['version']
-        app_labels = self.get_app_labels(app_labels)
 
-        self.create_api_folder(PROJECT_NAME, app_labels, API_VERSION)
+        self.create_api_folder(PROJECT_NAME, API_VERSION)
