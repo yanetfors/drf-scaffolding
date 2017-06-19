@@ -9,6 +9,10 @@ from django.core.management import BaseCommand
 from django.template import Context, Template
 
 from . import settings, templates
+from .utils import (
+    write, join_label_app, file_exists, create_file,
+    create_init_file, get_or_create_file, create_dir, get_or_create_dir
+)
 
 
 class Command(BaseCommand):
@@ -22,52 +26,6 @@ class Command(BaseCommand):
             'args', metavar='app_label', nargs='*',
             help='Name of the application where you want create the api.',
         )
-
-    def write(self, msg):
-        self.stderr.write(msg)
-
-    def join_label_app(self, label, app, is_py_file=True):
-        extension = '.py' if is_py_file else ''
-        return '{0}/{1}{2}'.format(label, app, extension)
-
-    def file_exists(self, path):
-        return os.path.isfile(path)
-
-    def create_file(self, path, context=None, template=None):
-        if not self.file_exists(path):
-            with open(path, 'w') as f:
-                msg = self.join_label_app(
-                    'Writing: ', path, is_py_file=False)
-                self.write(msg)
-                if not context:
-                    context = Context()
-
-                if not template:
-                    template = ''
-
-                template_loaded = Template(template)
-                api_text = template_loaded.render(context)
-                f.write(api_text)
-
-    def create_init_file(self, path):
-        url = self.join_label_app(path, '__init__')
-        self.create_file(url)
-
-    def get_or_create_file(self, path, context=None, template=None):
-        if not self.file_exists(path):
-            self.create_file(path, context, template)
-
-    def dir_exists(self, path):
-        return os.path.isdir(path)
-
-    def create_dir(self, path):
-        return os.makedirs(path)
-
-    def get_or_create_dir(self, path):
-        if not self.dir_exists(path):
-            return self.create_dir(path)
-        else:
-            return True
 
     def get_app_labels(self, app_labels):
         exclude_apps = settings.DRF_SETTINGS['exclude_apps']
@@ -91,12 +49,12 @@ class Command(BaseCommand):
         #
         # create init file into serializers folder
         #
-        self.create_init_file(config_app['serializer_path'])
+        create_init_file(config_app['serializer_path'])
 
         #
         # Create serializer file
         #
-        serializer_path = self.join_label_app(
+        serializer_path = join_label_app(
             config_app['serializer_path'],
             model['name'].lower()
         )
@@ -107,7 +65,7 @@ class Command(BaseCommand):
             'model': model
         })
 
-        self.get_or_create_file(
+        get_or_create_file(
             serializer_path,
             context,
             templates.SERIALIZER_TEMPLATE
@@ -117,12 +75,12 @@ class Command(BaseCommand):
         #
         # create init file into viewsets folder
         #
-        self.create_init_file(config_app['api_path'])
+        create_init_file(config_app['api_path'])
 
         #
         # Create api file
         #
-        viewset_path = self.join_label_app(
+        viewset_path = join_label_app(
             config_app['api_path'],
             model['name'].lower()
         )
@@ -134,10 +92,10 @@ class Command(BaseCommand):
             'model': model
         })
 
-        self.get_or_create_file(viewset_path, context, templates.API_TEMPLATE)
+        get_or_create_file(viewset_path, context, templates.API_TEMPLATE)
 
     def write_routes(self, config_app, models, project_name, api_version):
-        route_path = self.join_label_app(
+        route_path = join_label_app(
             config_app['path'],
             'routes'
         )
@@ -150,7 +108,7 @@ class Command(BaseCommand):
         #
         # create routes file in app root, for example: polls/routes.py
         #
-        self.get_or_create_file(route_path, context, templates.ROUTE_TEMPLATE)
+        get_or_create_file(route_path, context, templates.ROUTE_TEMPLATE)
 
     def get_meta_model_config(self, model):
         if hasattr(model._meta, 'drf_config'):
@@ -217,11 +175,11 @@ class Command(BaseCommand):
         if bad_app_labels:
             for app_label in bad_app_labels:
                 msg = "App '%s' could not be found." % app_label
-                self.write(msg)
+                write(msg)
             sys.exit(2)
 
         if not given_apps_path:
-            self.write("Apps could not be found.")
+            write("Apps could not be found.")
             sys.exit(2)
 
         return given_apps_path
@@ -231,21 +189,21 @@ class Command(BaseCommand):
             api_path = '{0}'.format(app['api_path'])
             serializer_path = '{0}'.format(app['serializer_path'])
             for model in app['models']:
-                api_file = self.join_label_app(
+                api_file = join_label_app(
                     api_path,
                     model['name'].lower()
                 )
-                serializer_file = self.join_label_app(
+                serializer_file = join_label_app(
                     serializer_path,
                     model['name'].lower()
                 )
                 if os.path.isfile(api_file):
                     msg = 'serializer is already exist in app: %s' % app['label']  # noqa
-                    self.write(msg)
+                    write(msg)
 
                 if os.path.isfile(serializer_file):
                     msg = 'api is already exist in app: %s' % app['label']
-                    self.write(msg)
+                    write(msg)
 
     def handle(self, *app_labels, **options):
         PROJECT_NAME = dj_settings.BASE_DIR.split('/')[-1]
@@ -263,11 +221,11 @@ class Command(BaseCommand):
         self.validate_paths(given_apps_path)
 
         for app in given_apps_path:
-            self.get_or_create_dir(app['api_path'])
-            self.get_or_create_dir(app['serializer_path'])
+            get_or_create_dir(app['api_path'])
+            get_or_create_dir(app['serializer_path'])
             for model in app['models']:
                 self.write_api(app, model, PROJECT_NAME)
                 if model['serializer'] is True:
-                    self.write_serializer(app, model, PROJECT_NAME)
+                    write_serializer(app, model, PROJECT_NAME)
 
             self.write_routes(app, app['models'], PROJECT_NAME, API_VERSION)

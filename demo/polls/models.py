@@ -9,7 +9,10 @@ class Poll(models.Model):
 
     class Meta:
         drf_config = {
-            'api': True
+            'api': True,
+            'fields': [
+                'title'
+            ]
         }
 
 
