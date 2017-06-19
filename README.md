@@ -57,14 +57,14 @@ class Poll(models.Model):
         drf_config = {
             'api': {
                 'scaffolding': True,
-                'methods': ['CREATE', 'UPDATE'],
-                'serializer': {
-                    'scaffolding': True,
-                    'fields': [
-                        'title'
-                    ]
-                }
-            }
+                'methods': ['CREATE', 'UPDATE'] 
+            },
+	    'serializer': {
+	        'scaffolding': True,
+	        'fields': [
+		    'title'
+	        ]
+	    }
         }
 
     title = models.CharField(max_length=100)
@@ -74,6 +74,8 @@ class Poll(models.Model):
 4.- Execute django command to create apis
 ```bash
 python manage.py createapi
+python manage.py creatediscover
+python manage.py createserializers
 ```
 
 5.- Add apis urls generated on your urls project.
