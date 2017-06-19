@@ -154,14 +154,15 @@ class Command(BaseCommand):
 
     def get_meta_model_config(self, model):
         if hasattr(model._meta, 'drf_config'):
-            if 'api' in model._meta.drf_config:
-                api = model._meta.drf_config['api']
-                if api['scaffolding'] is True:
+            drf_config = model._meta.drf_config
+            if 'api' in drf_config:
+                api = drf_config['api']
+                if api is True:
                     model_config = {
                         'name': model.__name__,
                     }
 
-                    if 'methods' in api:
+                    if 'methods' in drf_config:
                         model_config['methods'] = api['methods']
                     else:
                         model_config['methods'] = [
@@ -172,8 +173,8 @@ class Command(BaseCommand):
                             'UPDATE'
                         ]
 
-                    if 'serializer' in api:
-                        serializer = api['serializer']
+                    if 'serializer' in drf_config:
+                        serializer = drf_config['serializer']
                         if 'scaffolding' in serializer:
                             if serializer['scaffolding'] is True:
                                 model_config['serializer'] = True
@@ -204,7 +205,7 @@ class Command(BaseCommand):
                 given_apps_path.append({
                     'path': app.path,
                     'label': app_label,
-                    'api_path': "{0}/viewsets/".format(app.path),
+                    'api_path': "{0}/viewsets".format(app.path),
                     'serializer_path': "{0}/serializers/".format(app.path),
                     'models': models,
                     'api_version': api_version,
