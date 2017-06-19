@@ -9,10 +9,15 @@ class Poll(models.Model):
 
     class Meta:
         drf_config = {
-            'api': True,
-            'fields': [
-                'title'
-            ]
+            'api': {
+                'scaffolding': True,
+                'methods': ['CREATE', 'UPDATE']
+            },
+            'serializer': {
+                'fields': [
+                    'title'
+                ]
+            }
         }
 
 
@@ -22,8 +27,13 @@ class Question(models.Model):
 
     class Meta:
         drf_config = {
-            'api': True,
-            'fields': [
-                'title'
-            ]
+            'api': {
+                'scaffolding': True,
+                'methods': ['CREATE', 'UPDATE']
+            },
+            'serializer': {
+                'fields': [
+                    'title'
+                ]
+            }
         }

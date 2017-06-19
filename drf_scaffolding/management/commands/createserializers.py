@@ -45,67 +45,52 @@ class Command(BaseCommand):
 
         return set(app_labels)
 
-    def write_api(self, config_app, model, project_name):
+    def write_serializer(self, config_app, model, project_name):
         #
-        # create init file into viewsets folder
+        # create init file into serializers folder
         #
-        create_init_file(config_app['api_path'])
+        create_init_file(config_app['serializer_path'])
 
         #
-        # Create api file
+        # Create serializer file
         #
-        viewset_path = join_label_app(
-            config_app['api_path'],
+        serializer_path = join_label_app(
+            config_app['serializer_path'],
             model['name'].lower()
         )
 
         context = Context({
             'project_name': project_name,
             'app_name': config_app['label'],
-            'api_version': config_app['api_version'],
             'model': model
         })
 
-        get_or_create_file(viewset_path, context, templates.API_TEMPLATE)
-
-    def write_routes(self, config_app, models, project_name, api_version):
-        route_path = join_label_app(
-            config_app['path'],
-            'routes'
+        get_or_create_file(
+            serializer_path,
+            context,
+            templates.SERIALIZER_TEMPLATE
         )
-
-        context = Context({
-            'models': models,
-            'project_name': project_name,
-            'api_version': api_version
-        })
-        #
-        # create routes file in app root, for example: polls/routes.py
-        #
-        get_or_create_file(route_path, context, templates.ROUTE_TEMPLATE)
 
     def get_meta_model_config(self, model):
         if hasattr(model._meta, 'drf_config'):
             drf_config = model._meta.drf_config
-            if 'api' in drf_config:
-                api = drf_config['api']
-                if api['scaffolding'] is True:
-                    model_config = {
-                        'name': model.__name__
-                    }
+            model_config = {
+                'serializer': False
+            }
 
-                    if 'methods' in api:
-                        model_config['methods'] = api['methods']
-                    else:
-                        model_config['methods'] = [
-                            'CREATE',
-                            'RETRIEVE',
-                            'LIST',
-                            'DELETE',
-                            'UPDATE'
-                        ]
+            if 'serializer' in drf_config:
+                serializer = drf_config['serializer']
+                model_config = {
+                    'name': model.__name__,
+                    'serializer': True
+                }
 
-                    return model_config
+                if 'fields' in serializer:
+                    model_config['fields'] = serializer['fields']
+            else:
+                model_config['serializer'] = False
+
+            return model_config
         return None
 
     def get_label_app_config(self, app_labels, api_version):
@@ -146,24 +131,17 @@ class Command(BaseCommand):
 
     def validate_paths(self, apps_path):
         for app in apps_path:
-            api_path = '{0}'.format(app['api_path'])
             serializer_path = '{0}'.format(app['serializer_path'])
             for model in app['models']:
-                api_file = join_label_app(
-                    api_path,
-                    model['name'].lower()
-                )
-                serializer_file = join_label_app(
-                    serializer_path,
-                    model['name'].lower()
-                )
-                if os.path.isfile(api_file):
-                    msg = 'serializer is already exist in app: %s' % app['label']  # noqa
-                    write(msg)
+                if model['serializer'] is True:
+                    serializer_file = join_label_app(
+                        serializer_path,
+                        model['name'].lower()
+                    )
 
-                if os.path.isfile(serializer_file):
-                    msg = 'api is already exist in app: %s' % app['label']
-                    write(msg)
+                    if os.path.isfile(serializer_file):
+                        msg = 'api is already exist in app: %s' % app['label']
+                        write(msg)
 
     def handle(self, *app_labels, **options):
         PROJECT_NAME = dj_settings.BASE_DIR.split('/')[-1]
@@ -181,9 +159,7 @@ class Command(BaseCommand):
         self.validate_paths(given_apps_path)
 
         for app in given_apps_path:
-            get_or_create_dir(app['api_path'])
             get_or_create_dir(app['serializer_path'])
             for model in app['models']:
-                self.write_api(app, model, PROJECT_NAME)
-
-            self.write_routes(app, app['models'], PROJECT_NAME, API_VERSION)
+                if model['serializer'] is True:
+                    self.write_serializer(app, model, PROJECT_NAME)
