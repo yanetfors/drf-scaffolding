@@ -1,0 +1,4 @@
+django>=1.9
+djangorestframework
+django-rest-framework-nested
+django-rest-swagger
