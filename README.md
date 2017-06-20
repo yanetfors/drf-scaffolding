@@ -1,4 +1,4 @@
-# drf-scaffolding
+# (Alfa) drf-scaffolding
 Django app which allow create full APIs based on your models defined in your project
 
 ### How to use.
