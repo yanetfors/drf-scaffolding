@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
-import os
-
-from django.apps import apps
 from django.conf import settings as dj_settings
 from django.core.management import BaseCommand
-from django.template import Context, Template
+from django.template import Context
 
 from . import settings, templates
 from .utils import (
-    write, join_label_app, file_exists, create_file,
-    create_init_file, get_or_create_file, create_dir, get_or_create_dir
+    create_init_file,
+    get_or_create_dir,
+    get_or_create_file,
+    join_label_app
 )
 
 

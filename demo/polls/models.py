@@ -24,6 +24,7 @@ class Poll(models.Model):
 class Question(models.Model):
     title = models.CharField(max_length=100)
     body = models.CharField(max_length=100)
+    poll = models.ForeignKey(Poll, related_name='questions')
 
     class Meta:
         drf_config = {
@@ -32,8 +33,6 @@ class Question(models.Model):
                 'methods': ['CREATE', 'UPDATE']
             },
             'serializer': {
-                'fields': [
-                    'title'
-                ]
+                'scaffolding': True
             }
         }

@@ -6,12 +6,15 @@ from django.apps import apps
 from django.conf import settings as dj_settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.management import BaseCommand
-from django.template import Context, Template
+from django.template import Context
 
 from . import settings, templates
 from .utils import (
-    write, join_label_app, file_exists, create_file,
-    create_init_file, get_or_create_file, create_dir, get_or_create_dir
+    create_init_file,
+    get_or_create_dir,
+    get_or_create_file,
+    join_label_app,
+    write
 )
 
 
@@ -78,7 +81,10 @@ class Command(BaseCommand):
                 'serializer': False
             }
 
-            if 'serializer' in drf_config:
+            if 'serializer' not in drf_config:
+                return model_config
+
+            if drf_config['serializer']['scaffolding'] is True:
                 serializer = drf_config['serializer']
                 model_config = {
                     'name': model.__name__,
@@ -87,10 +93,22 @@ class Command(BaseCommand):
 
                 if 'fields' in serializer:
                     model_config['fields'] = serializer['fields']
+                else:
+                    fields = []
+                    for f in model._meta.get_fields():
+                        try:
+                            if not f.null:
+                                fields.append(f.name)
+                        except AttributeError:
+                            pass
+
+                    model_config['fields'] = fields
+
             else:
                 model_config['serializer'] = False
 
             return model_config
+
         return None
 
     def get_label_app_config(self, app_labels, api_version):
