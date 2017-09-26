@@ -84,6 +84,9 @@ class Command(BaseCommand):
             if 'serializer' not in drf_config:
                 return model_config
 
+            if 'scaffolding' not in drf_config['serializer']:
+                return model_config
+
             if drf_config['serializer']['scaffolding'] is True:
                 serializer = drf_config['serializer']
                 model_config = {
@@ -127,7 +130,7 @@ class Command(BaseCommand):
                     'path': app.path,
                     'label': app_label,
                     'api_path': "{0}/viewsets".format(app.path),
-                    'serializer_path': "{0}/serializers/".format(app.path),
+                    'serializer_path': "{0}/serializers".format(app.path),
                     'models': models,
                     'api_version': api_version,
                     'extra_options': {}

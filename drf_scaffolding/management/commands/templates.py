@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 API_TEMPLATE = '''# -*- coding: utf-8 -*-
-from drf_scaffolding.management.core.api import mixins
-from drf_scaffolding.management.core.api.viewsets import GenericViewSet
+from soft_drf.api import mixins
+from soft_drf.api.viewsets import GenericViewSet
 
 from {{app_name}}.serializers import {{model.name|lower}} as serializers
 from {{app_name}}.models import {{model.name}}
@@ -147,7 +147,7 @@ ROUTE_TEMPLATE = '''# -*- coding: utf-8 -*-
 from .viewsets import (
     {%for model in models%}{{model.name|lower}},{% if not forloop.last %}\n    {%endif%}{%endfor%}
 )
-from api.v{{api_version}}.routers import router
+from soft_drf.routing.v{{api_version}}.routers import router
 
 
 {% for model in models %}router.register(
@@ -158,7 +158,7 @@ from api.v{{api_version}}.routers import router
 '''
 
 SERIALIZER_TEMPLATE = '''# -*- coding: utf-8 -*-
-from drf_scaffolding.management.core.api.serializers import ModelSerializer
+from soft_drf.api.serializers import ModelSerializer
 
 from {{app_name}}.models import {{model.name}}
 
@@ -174,7 +174,7 @@ class {{model.name}}Serializer(ModelSerializer):
 '''
 
 ROUTER_TEMPLATE = '''# -*- coding: utf-8 -*-
-from drf_scaffolding.management.core.api.routers import DefaultRouter
+from soft_drf.api.routers import DefaultRouter
 
 router = DefaultRouter(trailing_slash=False)
 '''

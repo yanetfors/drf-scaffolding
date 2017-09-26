@@ -74,7 +74,7 @@ class Command(BaseCommand):
     def write_routes(self, config_app, models, project_name, api_version):
         route_path = join_label_app(
             config_app['path'],
-            'routes'
+            'api'
         )
 
         context = Context({
@@ -83,7 +83,7 @@ class Command(BaseCommand):
             'api_version': api_version
         })
         #
-        # create routes file in app root, for example: polls/routes.py
+        # create routes file in app root, for example: polls/api.py
         #
         get_or_create_file(route_path, context, templates.ROUTE_TEMPLATE)
 

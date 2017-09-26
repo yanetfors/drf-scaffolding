@@ -4,4 +4,4 @@ from django.db import models
 models.options.DEFAULT_NAMES += ('drf_config',)
 
 __author__ = u'Ángel Lagunas'
-__version__ = '0.0.1'
+__version__ = '0.0.13'

@@ -40,7 +40,8 @@ INSTALLED_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    'drf_scaffolding'
+    'drf_scaffolding',
+    'soft_drf'
 ]
 
 LOCAL_APPS = [
@@ -128,3 +129,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SHOW_DOCUMENTATION = True
+TITLE_DOCUMENTATION = "DRF DEMO"

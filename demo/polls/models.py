@@ -14,6 +14,7 @@ class Poll(models.Model):
                 'methods': ['CREATE', 'UPDATE']
             },
             'serializer': {
+                'scaffolding': True,
                 'fields': [
                     'title'
                 ]
