@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 API_TEMPLATE = '''# -*- coding: utf-8 -*-
-from app.{{app_name}}.serializers import {{model.name|lower}} as serializers
 from app.{{app_name}}.models import {{model.name}}
+from app.{{app_name}}.serializers import {{model.name|lower}} as serializers
 
 from soft_drf.api import mixins
 from soft_drf.api.viewsets import GenericViewSet
@@ -29,11 +29,11 @@ class {{model.name}}ViewSet(
 '''
 
 ROUTE_TEMPLATE = '''# -*- coding: utf-8 -*-
+from soft_drf.routing.v{{api_version}}.routers import router
+
 from .viewsets import (
     {%for model in models%}{{model.name|lower}},{% if not forloop.last %}\n    {%endif%}{%endfor%}
 )
-
-from soft_drf.routing.v{{api_version}}.routers import router
 
 
 {% for model in models %}router.register(
