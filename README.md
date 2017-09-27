@@ -7,7 +7,7 @@ Django app which allow create full APIs based on your models defined in your pro
 pip install drfscaffolding
 ```
 
-2.- Add rest_framework, rest_framework_swagger and drf_scaffolding on your install apps.
+2.- Add rest_framework  and drf_scaffolding on your install apps.
 
 We recommend you organize your installed applications as shown in the following example. Note that local applications are added in the LOCAL_APPS variable.
 ```python
@@ -22,7 +22,6 @@ INSTALLED_APPS = [
 
 THIRD_PARTY_APPS = [
     'rest_framework',
-    'rest_framework_swagger',
     'drf_scaffolding',
 ]
 

@@ -1,18 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from drf_scaffolding import __author__, __version__
-
 from setuptools import find_packages, setup
 
 
 setup(
     name='drfscaffolding',
-    version=__version__,
+    version='0.0.15',
     description=(
         'Django app which allow create full APIs based on your models defined '
         'in your project.'
     ),
-    author=__author__,
+    author='Angel Lagunas',
     author_email='angel.david.lagunas@gmail.com',
     url='https://angellagunas.github.io/drf-scaffolding/',
     download_url=(
