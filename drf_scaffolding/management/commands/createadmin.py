@@ -65,4 +65,7 @@ class Command(BaseCommand):
 
         for app in given_apps_path:
             models = [m for m in app['models'] if m['admin'] is True]
-            self.write_admin(app, models, PROJECT_NAME)
+            has_models = len(models) > 0
+
+            if has_models:
+                self.write_admin(app, models, PROJECT_NAME)

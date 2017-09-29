@@ -82,8 +82,19 @@ class Command(BaseCommand):
         validate_paths(given_apps_path)
 
         for app in given_apps_path:
-            get_or_create_dir(app['api_path'])
-            for model in app['models']:
-                self.write_api(app, model, PROJECT_NAME)
+            models = [m for m in app['models'] if m['api'] is True]
+            has_models = len(models) > 0
 
-            self.write_routes(app, app['models'], PROJECT_NAME, API_VERSION)
+            if has_models:
+                get_or_create_dir(app['api_path'])
+
+            for model in app['models']:
+                if model['api'] is True:
+                    self.write_api(app, model, PROJECT_NAME)
+
+            if has_models:
+                self.write_routes(
+                    app,
+                    models,
+                    PROJECT_NAME, API_VERSION
+                )
