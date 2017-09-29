@@ -16,7 +16,7 @@ from .utils import (
 
 
 class Command(BaseCommand):
-    help = "Create serializers from app models."
+    help = "Starts forms from app models."
 
     can_import_settings = True
     requires_system_checks = False
@@ -24,20 +24,20 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             'args', metavar='app_label', nargs='*',
-            help='Name of the application where you want to create the api.',
+            help='Name of the application where you want to create the form.',
         )
 
-    def write_serializer(self, config_app, model, project_name):
+    def write_form(self, config_app, model, project_name):
         #
         # create init file into serializers folder
         #
-        create_init_file(config_app['serializer_path'])
+        create_init_file(config_app['form_path'])
 
         #
-        # Create serializer file
+        # Create form file
         #
-        serializer_path = join_label_app(
-            config_app['serializer_path'],
+        form_path = join_label_app(
+            config_app['form_path'],
             model['name'].lower()
         )
 
@@ -48,9 +48,9 @@ class Command(BaseCommand):
         })
 
         get_or_create_file(
-            serializer_path,
+            form_path,
             context,
-            templates.SERIALIZER_TEMPLATE
+            templates.FORM_TEMPLATE
         )
 
     def handle(self, *app_labels, **options):
@@ -61,19 +61,15 @@ class Command(BaseCommand):
         #
         # Make sure the app they asked for exists
         #
-        given_apps_path = get_label_app_config(
-            app_labels,
-            API_VERSION,
-            'serializer'
-        )
+        given_apps_path = get_label_app_config(app_labels, API_VERSION, 'form')
 
         #
         # Validate applications api path or serializer path exists
         #
-        validate_paths(given_apps_path, file_type='serializer')
+        validate_paths(given_apps_path, file_type='form')
 
         for app in given_apps_path:
-            get_or_create_dir(app['serializer_path'])
+            get_or_create_dir(app['form_path'])
             for model in app['models']:
-                if model['serializer'] is True:
-                    self.write_serializer(app, model, PROJECT_NAME)
+                if model['form'] is True:
+                    self.write_form(app, model, PROJECT_NAME)
