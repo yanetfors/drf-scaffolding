@@ -8,18 +8,9 @@ from soft_drf.api.viewsets import GenericViewSet
 
 
 class {{model.name}}ViewSet(
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.CreateModelMixin,
-    mixins.PartialUpdateModelMixin,
-    mixins.DestroyModelMixin,
-    GenericViewSet
+    GenericViewSet,{%if 'LIST' in model.methods%}\n    mixins.ListModelMixin,{%endif%}{%if 'RETRIEVE' in model.methods%}\n    mixins.RetrieveModelMixin,{%endif%}{%if 'CREATE' in model.methods%}\n    mixins.CreateModelMixin,{%endif%}{%if 'UPDATE' in model.methods%}\n    mixins.PartialUpdateModelMixin,{%endif%}{%if 'DELETE' in model.methods%}\n    mixins.DestroyModelMixin,{%endif%}
 ):
-    serializer_class = serializers.{{model.name}}Serializer
-    list_serializer_class = serializers.{{model.name}}Serializer
-    retrieve_serializer_class = serializers.{{model.name}}Serializer
-    create_serializer_class = serializers.{{model.name}}Serializer
-    update_serializer_class = serializers.{{model.name}}Serializer
+    serializer_class = serializers.{{model.name}}Serializer{%if 'LIST' in model.methods%}\n    list_serializer_class = serializers.{{model.name}}Serializer{%endif%}{%if 'RETRIEVE' in model.methods%}\n    retrieve_serializer_class = serializers.{{model.name}}Serializer{%endif%}{%if 'CREATE' in model.methods%}\n    create_serializer_class = serializers.{{model.name}}Serializer{%endif%}{%if 'DELETE' in model.methods%}\n    update_serializer_class = serializers.{{model.name}}Serializer{%endif%}
 
     permission_classes = []  # put your custom permissions here
 
