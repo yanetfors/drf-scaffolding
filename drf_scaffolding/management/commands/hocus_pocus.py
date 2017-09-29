@@ -2,6 +2,8 @@
 
 from django.core.management import BaseCommand, call_command
 
+from .utils import write
+
 
 class Command(BaseCommand):
     help = "Starts an full API and admin from app models."
@@ -28,4 +30,4 @@ class Command(BaseCommand):
             call_command('createadmin')
             call_command('createapi')
 
-        print('hocus pocus!!!')
+        write('hocus pocus!!!')
