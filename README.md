@@ -7,7 +7,7 @@ Django app which allow create full APIs based on your models defined in your pro
 pip install drfscaffolding
 ```
 
-2.- Add rest_framework  and drf_scaffolding on your install apps.
+2.- Add rest_framework, soft_drf and drf_scaffolding on your install apps.
 
 We recommend you organize your installed applications as shown in the following example. Note that local applications are added in the LOCAL_APPS variable.
 ```python
@@ -23,6 +23,7 @@ INSTALLED_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'drf_scaffolding',
+    'soft_drf'
 ]
 
 LOCAL_APPS = [
@@ -49,6 +50,9 @@ The serializer attribute also contains the scaffolding property to define whethe
 
 The fields field in serializer defines the fields that we want to be added in the serializer of the model to be used in api.If you leave this property undefined, then, only the id in the serializer will be assigned.
 
+The scaffolding attribute in 'admin' is the one that defines whether an admin files will be generated for the model with that configuration.
+The scaffolding attribute in 'forms' is the one that defines whether an forms folder will be generated for the model with that configuration.
+
 example:
 ```python
 class Poll(models.Model):
@@ -58,12 +62,18 @@ class Poll(models.Model):
                 'scaffolding': True,
                 'methods': ['CREATE', 'UPDATE'] 
             },
-	    'serializer': {
-	        'scaffolding': True,
-	        'fields': [
-		    'title'
-	        ]
-	    }
+            'serializer': {
+                'scaffolding': True,
+                'fields': [
+                    'title'
+                ]
+            },
+            'form': {
+                'scaffolding': True
+            },
+            'admin': {
+                'scaffolding': True
+            }
         }
 
     title = models.CharField(max_length=100)
@@ -72,9 +82,14 @@ class Poll(models.Model):
 
 4.- Execute django command to create apis
 ```bash
-python manage.py createapi
-python manage.py creatediscover
+python manage.py createforms
+python manage.py createadmin
 python manage.py createserializers
+python manage.py createapi
+```
+Optional: You can execute hocus_pocus to run the 4 commands:
+```bash
+python manage.py hocus_pocus
 ```
 
 5.- Add apis urls generated on your urls project.
@@ -92,4 +107,4 @@ urlpatterns = [
 python manage.py runserver
 ```
 
-7.- Now, you can check your urls in your web browser and use your api.
+7.- Now, you can check your urls in your web browser and use your api or your admin.

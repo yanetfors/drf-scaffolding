@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-import os
-import sys
-
-from django.apps import apps
 from django.conf import settings as dj_settings
-from django.contrib.contenttypes.models import ContentType
 from django.core.management import BaseCommand
 from django.template import Context
 

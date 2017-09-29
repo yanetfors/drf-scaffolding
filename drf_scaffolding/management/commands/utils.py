@@ -5,13 +5,22 @@ import sys
 from django.apps import apps
 from django.conf import settings as dj_settings
 from django.contrib.contenttypes.models import ContentType
+from django.core.management.base import OutputWrapper
+from django.core.management.color import color_style
 from django.template import Context, Template
 
 from . import settings
 
 
-def write(msg):
-    sys.stdout.write(msg)
+def write(msg, is_error=False):
+    stdout = OutputWrapper(sys.stdout)
+    style = color_style()
+    if is_error:
+        styling_msg = style.ERROR(msg)
+    else:
+        styling_msg = style.SUCCESS(msg)
+
+    stdout.write(styling_msg)
 
 
 def join_label_app(label, app, is_py_file=True):
@@ -100,7 +109,7 @@ def validate_paths(apps_path, file_type='api'):
                         file_type,
                         app['label']
                     )
-                    write(msg)
+                    write(msg, True)
 
 
 def get_meta_model_config(model, file_type='api'):
@@ -172,11 +181,11 @@ def get_label_app_config(app_labels, api_version, file_type='api'):
     if bad_app_labels:
         for app_label in bad_app_labels:
             msg = "App '%s' could not be found." % app_label
-            write(msg)
+            write(msg, True)
         sys.exit(2)
 
     if not given_apps_path:
-        write("Apps could not be found.")
+        write("Apps could not be found.", True)
         sys.exit(2)
 
     return given_apps_path

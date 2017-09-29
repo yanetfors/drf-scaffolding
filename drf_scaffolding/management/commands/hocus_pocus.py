@@ -2,6 +2,8 @@
 
 from django.core.management import BaseCommand, call_command
 
+from .utils import write
+
 
 class Command(BaseCommand):
     help = "Starts an full API and admin from app models."
@@ -12,7 +14,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             'args', metavar='app_label', nargs='*',
-            help='Name of the application where you want to do scaffoldin.',
+            help='Name of the application where you want to do scaffolding.',
         )
 
     def handle(self, *app_labels, **options):
@@ -28,4 +30,4 @@ class Command(BaseCommand):
             call_command('createadmin')
             call_command('createapi')
 
-        print('hocus pocus!!!')
+        write('hocus pocus!!!')
