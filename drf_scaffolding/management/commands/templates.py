@@ -58,3 +58,40 @@ class {{model.name}}Serializer(ModelSerializer):
             'id',{%endif%}
         )
 '''
+
+
+FORM_TEMPLATE = '''from app.{{app_name}}.models import {{model.name}}
+
+from django import forms
+
+
+class {{model.name}}AdminForm(forms.ModelForm):
+    class Meta:
+        model = {{model.name}}
+        fields = {%if model.fields%}[{%for field in model.fields%}
+            '{{field}}',{%endfor%}
+        ]{%else%}'__all__'{%endif%}
+'''
+
+
+ADMIN_TEMPLATE = '''{%for model in models%}from app.{{app_name}}.forms.{{model.name|lower}} import {{model.name}}AdminForm
+{%endfor%}
+from app.{{app_name}}.models import (
+    {%for model in models%}{{model.name}},{% if not forloop.last %}\n    {%endif%}{%endfor%}
+)
+
+from django.contrib import admin
+
+
+{%for model in models%}class {{model.name}}Admin(admin.ModelAdmin):
+    form = {{model.name}}AdminForm
+    list_display = {%if model.fields%}[{%for field in model.fields%}
+        '{{field}}',{%endfor%}
+    ]{%else%}'__all__'{%endif%}
+
+    search_fields = {%if model.fields%}[{%for field in model.fields%}
+        '{{field}}',{%endfor%}
+    ]{%else%}'__all__'{%endif%}{% if not forloop.last %}\n\n\n{%else%}\n{%endif%}{%endfor%}
+{%for model in models%}
+admin.site.register({{model.name}}, {{model.name}}Admin){%endfor%}
+'''
