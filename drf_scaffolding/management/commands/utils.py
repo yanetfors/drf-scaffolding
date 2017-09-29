@@ -131,6 +131,17 @@ def get_meta_model_config(model, file_type='api'):
             }
             model_config[file_type] = True
 
+            if 'methods' in original_confs:
+                model_config['methods'] = original_confs['methods']
+            else:
+                model_config['methods'] = [
+                    'CREATE',
+                    'RETRIEVE',
+                    'LIST',
+                    'DELETE',
+                    'UPDATE'
+                ]
+
             if 'fields' in original_confs:
                 model_config['fields'] = original_confs['fields']
             else:
