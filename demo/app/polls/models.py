@@ -18,6 +18,12 @@ class Poll(models.Model):
                 'fields': [
                     'title'
                 ]
+            },
+            'form': {
+                'scaffolding': True
+            },
+            'admin': {
+                'scaffolding': True
             }
         }
 
@@ -34,6 +40,12 @@ class Question(models.Model):
                 'methods': ['CREATE', 'UPDATE']
             },
             'serializer': {
+                'scaffolding': True
+            },
+            'form': {
+                'scaffolding': True
+            },
+            'admin': {
                 'scaffolding': True
             }
         }

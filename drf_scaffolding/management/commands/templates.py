@@ -8,18 +8,9 @@ from soft_drf.api.viewsets import GenericViewSet
 
 
 class {{model.name}}ViewSet(
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.CreateModelMixin,
-    mixins.PartialUpdateModelMixin,
-    mixins.DestroyModelMixin,
-    GenericViewSet
+    GenericViewSet,{%if 'LIST' in model.methods%}\n    mixins.ListModelMixin,{%endif%}{%if 'RETRIEVE' in model.methods%}\n    mixins.RetrieveModelMixin,{%endif%}{%if 'CREATE' in model.methods%}\n    mixins.CreateModelMixin,{%endif%}{%if 'UPDATE' in model.methods%}\n    mixins.PartialUpdateModelMixin,{%endif%}{%if 'DELETE' in model.methods%}\n    mixins.DestroyModelMixin,{%endif%}
 ):
-    serializer_class = serializers.{{model.name}}Serializer
-    list_serializer_class = serializers.{{model.name}}Serializer
-    retrieve_serializer_class = serializers.{{model.name}}Serializer
-    create_serializer_class = serializers.{{model.name}}Serializer
-    update_serializer_class = serializers.{{model.name}}Serializer
+    serializer_class = serializers.{{model.name}}Serializer{%if 'LIST' in model.methods%}\n    list_serializer_class = serializers.{{model.name}}Serializer{%endif%}{%if 'RETRIEVE' in model.methods%}\n    retrieve_serializer_class = serializers.{{model.name}}Serializer{%endif%}{%if 'CREATE' in model.methods%}\n    create_serializer_class = serializers.{{model.name}}Serializer{%endif%}{%if 'DELETE' in model.methods%}\n    update_serializer_class = serializers.{{model.name}}Serializer{%endif%}
 
     permission_classes = []  # put your custom permissions here
 
@@ -57,4 +48,41 @@ class {{model.name}}Serializer(ModelSerializer):
             '{{field}}',{%endfor%}{%else%}
             'id',{%endif%}
         )
+'''
+
+
+FORM_TEMPLATE = '''from app.{{app_name}}.models import {{model.name}}
+
+from django import forms
+
+
+class {{model.name}}AdminForm(forms.ModelForm):
+    class Meta:
+        model = {{model.name}}
+        fields = {%if model.fields%}[{%for field in model.fields%}
+            '{{field}}',{%endfor%}
+        ]{%else%}'__all__'{%endif%}
+'''
+
+
+ADMIN_TEMPLATE = '''{%for model in models%}from app.{{app_name}}.forms.{{model.name|lower}} import {{model.name}}AdminForm
+{%endfor%}
+from app.{{app_name}}.models import (
+    {%for model in models%}{{model.name}},{% if not forloop.last %}\n    {%endif%}{%endfor%}
+)
+
+from django.contrib import admin
+
+
+{%for model in models%}class {{model.name}}Admin(admin.ModelAdmin):
+    form = {{model.name}}AdminForm
+    list_display = {%if model.fields%}[{%for field in model.fields%}
+        '{{field}}',{%endfor%}
+    ]{%else%}'__all__'{%endif%}
+
+    search_fields = {%if model.fields%}[{%for field in model.fields%}
+        '{{field}}',{%endfor%}
+    ]{%else%}'__all__'{%endif%}{% if not forloop.last %}\n\n\n{%else%}\n{%endif%}{%endfor%}
+{%for model in models%}
+admin.site.register({{model.name}}, {{model.name}}Admin){%endfor%}
 '''

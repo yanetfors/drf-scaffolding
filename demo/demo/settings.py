@@ -45,7 +45,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    'polls'
+    'app.polls'
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS + LOCAL_APPS
