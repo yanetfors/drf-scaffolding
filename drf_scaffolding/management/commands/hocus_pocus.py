@@ -14,7 +14,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             'args', metavar='app_label', nargs='*',
-            help='Name of the application where you want to do scaffoldin.',
+            help='Name of the application where you want to do scaffolding.',
         )
 
     def handle(self, *app_labels, **options):
